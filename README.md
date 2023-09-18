@@ -1,2 +1,2 @@
 # DSA
-Data Structures And Alogirthm Using Rust Programming Language
+Data Structures And Alogirthm  Implementation using Rust Programming Language
