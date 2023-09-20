@@ -40,15 +40,14 @@ fn test_insertion_sort_single_element() {
     assert_eq!(single_element_array, [1]);
 }
 
-
 #[test]
 fn test_insertion_sort_sorted_array() {
     let mut numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
     let mut sorted_numbers = numbers.clone();
-    
+
     sorted_numbers.sort();
     numbers = sorted_numbers.clone();
-    
+
     insertion_sort(&mut numbers);
     assert_eq!(numbers, sorted_numbers);
 }
@@ -59,11 +58,11 @@ fn test_insertion_sort_decending_array() {
     let mut sorted_numbers = numbers.clone();
 
     sorted_numbers.sort();
-    
+
     numbers = sorted_numbers.clone();
     numbers.sort();
     numbers.reverse();
-    
+
     insertion_sort(&mut numbers);
     assert_eq!(numbers, sorted_numbers);
 }

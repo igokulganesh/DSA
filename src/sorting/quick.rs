@@ -1,8 +1,8 @@
 fn partision<T: Ord>(arr: &mut [T]) -> usize {
-    let pivot = arr.len() -1; 
-    let mut i = 0; 
+    let pivot = arr.len() - 1;
+    let mut i = 0;
 
-    for j in 0..arr.len()-1 {
+    for j in 0..arr.len() - 1 {
         if arr[j] <= arr[pivot] {
             arr.swap(j, i);
             i += 1;
@@ -17,8 +17,8 @@ pub fn quick_sort<T: Ord>(arr: &mut [T]) {
     if arr.len() > 1 {
         let pivot = partision(arr);
         quick_sort(&mut arr[0..pivot]);
-        quick_sort(&mut arr[pivot+1..]);
-    } 
+        quick_sort(&mut arr[pivot + 1..]);
+    }
 }
 
 #[test]
@@ -57,10 +57,10 @@ fn test_quick_sort_single_element() {
 fn test_quick_sort_sorted_array() {
     let mut numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
     let mut sorted_numbers = numbers.clone();
-    
+
     sorted_numbers.sort();
     numbers = sorted_numbers.clone();
-    
+
     quick_sort(&mut numbers);
     assert_eq!(numbers, sorted_numbers);
 }
@@ -71,12 +71,11 @@ fn test_quick_sort_decending_array() {
     let mut sorted_numbers = numbers.clone();
 
     sorted_numbers.sort();
-    
+
     numbers = sorted_numbers.clone();
     numbers.sort();
     numbers.reverse();
-    
+
     quick_sort(&mut numbers);
     assert_eq!(numbers, sorted_numbers);
 }
-
