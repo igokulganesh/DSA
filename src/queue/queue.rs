@@ -1,12 +1,14 @@
 use std::collections::VecDeque;
 
 pub struct Queue<T> {
-    queue: VecDeque<T>
+    queue: VecDeque<T>,
 }
 
 impl<T> Queue<T> {
     pub fn new() -> Self {
-        Self { queue: VecDeque::new() }
+        Self {
+            queue: VecDeque::new(),
+        }
     }
 
     pub fn push(&mut self, val: T) {

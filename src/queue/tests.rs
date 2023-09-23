@@ -26,7 +26,7 @@ fn test_queue_with_none() {
     for _ in 1..=100 {
         match que.pop() {
             Some(val) => panic!("Expected None Value, Got Some Value {}", val),
-            None => (),  
+            None => (),
         }
     }
 }

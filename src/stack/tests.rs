@@ -11,8 +11,7 @@ fn test_stack_with_some() {
     for i in (1..=100).rev() {
         if let Some(val) = s.pop() {
             assert_eq!(i, val);
-        }
-        else {
+        } else {
             panic!("Expected Some Value, Got None Value");
         }
     }
@@ -27,9 +26,8 @@ fn test_stack_with_none() {
     // expecting None Value
     for _ in 0..10 {
         match s.pop() {
-            None => (), 
+            None => (),
             Some(val) => panic!("Expected None Value, Got Some Value {}", val),
         }
     }
-} 
-
+}

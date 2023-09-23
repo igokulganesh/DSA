@@ -1,2 +1,2 @@
-pub mod queue;
+pub mod list;
 pub mod tests;
