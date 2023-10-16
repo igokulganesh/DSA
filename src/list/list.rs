@@ -1,53 +1,62 @@
+type Link<T> = Option<Box<Node<T>>>;
+
 pub struct Node<T: Copy> {
     pub data: T,
-    next: Option<Box<Node<T>>>,
+    pub next: Link<T>,
 }
 
 impl<T: Copy> Node<T> {
-    pub fn new(val: T) -> Box<Node<T>> {
-        Box::new(Self {
-            data: val,
-            next: None,
-        })
-    }
-
-    pub fn set_next(&mut self, next: Option<Box<Node<T>>>) {
-        self.next = next;
+    pub fn new(data: T) -> Box<Node<T>> {
+        Box::new(Node { data, next: None })
     }
 }
 
 pub struct List<T: Copy> {
-    head: Option<Box<Node<T>>>,
+    head: Link<T>,
+    len: usize,
 }
 
 impl<T: Copy> List<T> {
     pub fn new() -> Self {
-        Self { head: None }
+        Self { head: None, len: 0 }
     }
 
-    pub fn push_front(&mut self, val: T) {
+    pub fn push_front(&mut self, data: T) {
+        let mut new_node = Node::new(data);
+
         match self.head.take() {
-            None => {
-                self.head = Some(Node::new(val));
-            }
-            Some(head) => {
-                let mut new_head = Node::new(val);
-                new_head.set_next(Some(head));
-                self.head = Some(new_head);
+            None => self.head = Some(new_node),
+            Some(prev_head) => {
+                new_node.next = Some(prev_head);
+                self.head = Some(new_node);
             }
         }
+        self.len += 1;
+    }
+
+    pub fn push_back(&mut self, data: T) {
+        let new_node = Node::new(data);
+        self.len += 1;
+
+        let mut current = &mut self.head;
+        while let Some(node) = current {
+            if node.next.is_none() {
+                node.next = Some(new_node);
+                return;
+            }
+            current = &mut node.next;
+        }
+
+        // If the list is empty, add the new node as the head
+        self.head = Some(new_node);
     }
 
     pub fn len(&self) -> usize {
-        let mut head = &self.head;
-        let mut len = 0;
+        self.len
+    }
 
-        while let Some(node) = head {
-            len += 1;
-            head = &node.next;
-        }
-
-        len
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
     }
 }
 
