@@ -1,21 +1,23 @@
+use std::fmt::{Debug, Display};
+
 type Link<T> = Option<Box<Node<T>>>;
 
-pub struct Node<T: Copy> {
+pub struct Node<T: Copy + Display + Debug> {
     pub data: T,
     pub next: Link<T>,
 }
 
-impl<T: Copy> Node<T> {
+impl<T: Copy + Display + Debug> Node<T> {
     pub fn new(data: T) -> Box<Node<T>> {
         Box::new(Node { data, next: None })
     }
 }
 
-pub struct List<T: Copy> {
+pub struct List<T: Copy + Display + Debug> {
     head: Link<T>,
 }
 
-impl<T: Copy> List<T> {
+impl<T: Copy + Display + Debug> List<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
@@ -48,6 +50,13 @@ impl<T: Copy> List<T> {
         self.head = Some(new_node);
     }
 
+    pub fn pop_front(&mut self) -> Option<T> {
+        self.head.take().map(|node| {
+            self.head = node.next;
+            node.data
+        })
+    }
+
     pub fn len(&mut self) -> usize {
         let mut len: usize = 0;
 
@@ -70,7 +79,7 @@ impl<T: Copy> List<T> {
     }
 }
 
-impl<T: Copy> From<Vec<T>> for List<T> {
+impl<T: Copy + Display + Debug> From<Vec<T>> for List<T> {
     fn from(value: Vec<T>) -> Self {
         let mut list = Self::new();
         for i in value {
@@ -80,7 +89,7 @@ impl<T: Copy> From<Vec<T>> for List<T> {
     }
 }
 
-impl<T: Copy> From<List<T>> for Vec<T> {
+impl<T: Copy + Display + Debug> From<List<T>> for Vec<T> {
     fn from(list: List<T>) -> Self {
         let mut vector = Vec::new();
 

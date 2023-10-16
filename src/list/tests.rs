@@ -47,3 +47,22 @@ fn test_list_size() {
 
     assert!(!list.is_empty());
 }
+
+#[test]
+fn test_list_pop_front() {
+    use super::list::List;
+
+    let mut list = List::new();
+
+    for i in 1..=100 {
+        list.push_back(i);
+    }
+
+    let mut data;
+    for i in 1..=100 {
+        data = list.pop_front();
+        assert_eq!(i, data.unwrap());
+    }
+
+    assert_eq!(None, list.pop_front());
+}
