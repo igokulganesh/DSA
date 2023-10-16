@@ -31,3 +31,19 @@ fn test_list_push_back() {
 
     assert_eq!(check_vec, list_vec);
 }
+
+#[test]
+fn test_list_size() {
+    use super::list::List;
+
+    let mut list = List::new();
+
+    assert!(list.is_empty());
+
+    for i in 1..=100 {
+        list.push_front(i);
+        assert_eq!(i, list.len());
+    }
+
+    assert!(!list.is_empty());
+}

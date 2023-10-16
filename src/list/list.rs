@@ -13,12 +13,11 @@ impl<T: Copy> Node<T> {
 
 pub struct List<T: Copy> {
     head: Link<T>,
-    len: usize,
 }
 
 impl<T: Copy> List<T> {
     pub fn new() -> Self {
-        Self { head: None, len: 0 }
+        Self { head: None }
     }
 
     pub fn push_front(&mut self, data: T) {
@@ -31,12 +30,10 @@ impl<T: Copy> List<T> {
                 self.head = Some(new_node);
             }
         }
-        self.len += 1;
     }
 
     pub fn push_back(&mut self, data: T) {
         let new_node = Node::new(data);
-        self.len += 1;
 
         let mut current = &mut self.head;
         while let Some(node) = current {
@@ -51,12 +48,25 @@ impl<T: Copy> List<T> {
         self.head = Some(new_node);
     }
 
-    pub fn len(&self) -> usize {
-        self.len
+    pub fn len(&mut self) -> usize {
+        let mut len: usize = 0;
+
+        let mut current = &mut self.head;
+
+        while let Some(node) = current {
+            len += 1;
+            if node.next.is_none() {
+                break;
+            }
+            current = &mut node.next;
+            println!("len: {}", len);
+        }
+
+        len
     }
 
     pub fn is_empty(&self) -> bool {
-        self.len == 0
+        self.head.is_none()
     }
 }
 
