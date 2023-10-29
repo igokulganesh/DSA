@@ -119,3 +119,22 @@ fn test_doubly_list_push_back() {
 
     assert_eq!(check_vec, list_vec);
 }
+
+#[test]
+fn test_doubly_list_pop_front() {
+    use super::DoublyList;
+
+    let mut list = DoublyList::new();
+
+    for i in 1..=100 {
+        list.push_back(i);
+    }
+
+    let mut data;
+    for i in 1..=100 {
+        data = list.pop_front();
+        assert_eq!(i, data.unwrap());
+    }
+
+    assert_eq!(None, list.pop_front());
+}

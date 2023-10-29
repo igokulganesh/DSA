@@ -26,7 +26,7 @@ pub struct DoublyList<T> {
     pub len: usize,
 }
 
-impl<T: Debug> DoublyList<T> {
+impl<T: Debug + Clone + Copy> DoublyList<T> {
     pub fn new() -> Self {
         DoublyList {
             head: None,
@@ -67,6 +67,27 @@ impl<T: Debug> DoublyList<T> {
             }
         }
         self.len += 1;
+    }
+
+    pub fn pop_front(&mut self) -> Option<T> {
+        match self.head.take() {
+            None => None,
+            Some(head) => {
+                self.len -= 1;
+
+                match head.borrow_mut().next.take() {
+                    None => {
+                        self.head = None;
+                        self.tail = None;
+                    }
+                    Some(next_head) => {
+                        next_head.borrow_mut().prev = None;
+                        self.head = Some(next_head);
+                    }
+                };
+                Some(head.borrow().data)
+            }
+        }
     }
 }
 
