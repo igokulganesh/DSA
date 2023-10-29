@@ -85,9 +85,39 @@ impl<T: Debug + Clone + Copy> DoublyList<T> {
                         self.head = Some(next_head);
                     }
                 };
+
                 Some(head.borrow().data)
             }
         }
+    }
+
+    pub fn pop_back(&mut self) -> Option<T> {
+        match self.tail.take() {
+            None => None,
+            Some(cur_tail) => {
+                self.len -= 1;
+
+                match cur_tail.borrow_mut().prev.take() {
+                    None => {
+                        self.head = None;
+                        self.tail = None;
+                    }
+                    Some(prev_tail) => {
+                        prev_tail.borrow_mut().next = None;
+                        self.tail = Some(prev_tail);
+                    }
+                };
+                Some(cur_tail.borrow().data)
+            }
+        }
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.head.is_none()
     }
 }
 

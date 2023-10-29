@@ -138,3 +138,38 @@ fn test_doubly_list_pop_front() {
 
     assert_eq!(None, list.pop_front());
 }
+
+#[test]
+fn test_doubly_list_pop_back() {
+    use super::DoublyList;
+
+    let mut list = DoublyList::new();
+
+    for i in 1..=100 {
+        list.push_front(i);
+    }
+
+    let mut data;
+    for i in 1..=100 {
+        data = list.pop_back();
+        assert_eq!(i, data.unwrap());
+    }
+
+    assert_eq!(None, list.pop_back());
+}
+
+#[test]
+fn test_doubly_list_size() {
+    use super::DoublyList;
+
+    let mut list = DoublyList::new();
+
+    assert!(list.is_empty());
+
+    for i in 1..=100 {
+        list.push_front(i);
+        assert_eq!(i, list.len());
+    }
+
+    assert!(!list.is_empty());
+}
