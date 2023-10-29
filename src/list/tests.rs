@@ -66,3 +66,22 @@ fn test_list_pop_front() {
 
     assert_eq!(None, list.pop_front());
 }
+
+#[test]
+fn test_list_pop_back() {
+    use super::list::List;
+
+    let mut list = List::new();
+
+    for i in 1..=100 {
+        list.push_front(i);
+    }
+
+    let mut data;
+    for i in 1..=100 {
+        data = list.pop_back();
+        assert_eq!(i, data.unwrap());
+    }
+
+    assert_eq!(None, list.pop_back());
+}

@@ -67,6 +67,29 @@ impl<T: Copy + Display + Debug> List<T> {
         }
     }
 
+    pub fn pop_back(&mut self) -> Option<T> {
+        if self.head.is_none() {
+            return None;
+        }
+
+        let mut current = self.head.clone();
+        let mut prev: Link<T> = None;
+
+        while let Some(node) = current.clone() {
+            if node.borrow().next.is_none() {
+                if prev.is_some() {
+                    prev.unwrap().borrow_mut().next = None;
+                } else {
+                    self.head = None;
+                }
+                return Some(node.borrow().data);
+            }
+            prev = current.clone();
+            current = node.borrow().next.clone();
+        }
+        None
+    }
+
     pub fn len(&mut self) -> usize {
         let mut len: usize = 0;
 
