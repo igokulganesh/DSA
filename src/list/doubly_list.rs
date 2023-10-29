@@ -51,6 +51,23 @@ impl<T: Debug> DoublyList<T> {
         };
         self.len += 1;
     }
+
+    pub fn push_back(&mut self, data: T) {
+        let new_node = Node::new(data);
+
+        match self.tail.take() {
+            None => {
+                self.head = Some(new_node.clone());
+                self.tail = Some(new_node.clone());
+            }
+            Some(prev_tail) => {
+                self.tail = Some(new_node.clone());
+                prev_tail.borrow_mut().next = Some(new_node.clone());
+                new_node.borrow_mut().prev = Some(prev_tail.clone());
+            }
+        }
+        self.len += 1;
+    }
 }
 
 impl<T: Copy + Debug> From<DoublyList<T>> for Vec<T> {
