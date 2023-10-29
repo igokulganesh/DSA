@@ -1,6 +1,8 @@
+use std::cell::RefCell;
 use std::fmt::{Debug, Display};
+use std::rc::Rc;
 
-type Link<T> = Option<Box<Node<T>>>;
+type Link<T> = Option<Rc<RefCell<Node<T>>>>;
 
 pub struct Node<T: Copy + Display + Debug> {
     pub data: T,
@@ -8,8 +10,8 @@ pub struct Node<T: Copy + Display + Debug> {
 }
 
 impl<T: Copy + Display + Debug> Node<T> {
-    pub fn new(data: T) -> Box<Node<T>> {
-        Box::new(Node { data, next: None })
+    pub fn new(data: T) -> Rc<RefCell<Node<T>>> {
+        Rc::new(RefCell::new(Node { data, next: None }))
     }
 }
 
@@ -23,12 +25,12 @@ impl<T: Copy + Display + Debug> List<T> {
     }
 
     pub fn push_front(&mut self, data: T) {
-        let mut new_node = Node::new(data);
+        let new_node = Node::new(data);
 
         match self.head.take() {
             None => self.head = Some(new_node),
             Some(prev_head) => {
-                new_node.next = Some(prev_head);
+                new_node.borrow_mut().next = Some(prev_head);
                 self.head = Some(new_node);
             }
         }
@@ -37,13 +39,14 @@ impl<T: Copy + Display + Debug> List<T> {
     pub fn push_back(&mut self, data: T) {
         let new_node = Node::new(data);
 
-        let mut current = &mut self.head;
+        let mut current = self.head.clone();
+
         while let Some(node) = current {
-            if node.next.is_none() {
-                node.next = Some(new_node);
+            if node.borrow().next.is_none() {
+                node.borrow_mut().next = Some(new_node);
                 return;
             }
-            current = &mut node.next;
+            current = node.borrow().next.clone();
         }
 
         // If the list is empty, add the new node as the head
@@ -51,24 +54,30 @@ impl<T: Copy + Display + Debug> List<T> {
     }
 
     pub fn pop_front(&mut self) -> Option<T> {
-        self.head.take().map(|node| {
-            self.head = node.next;
-            node.data
-        })
+        match self.head.take() {
+            None => None,
+            Some(head) => {
+                if head.borrow().next.is_some() {
+                    self.head = head.borrow().next.clone();
+                } else {
+                    self.head = None;
+                }
+                Some(head.borrow().data)
+            }
+        }
     }
 
     pub fn len(&mut self) -> usize {
         let mut len: usize = 0;
 
-        let mut current = &mut self.head;
+        let mut current = self.head.clone();
 
         while let Some(node) = current {
             len += 1;
-            if node.next.is_none() {
+            if node.borrow().next.is_none() {
                 break;
             }
-            current = &mut node.next;
-            println!("len: {}", len);
+            current = node.borrow().next.clone();
         }
 
         len
@@ -93,11 +102,11 @@ impl<T: Copy + Display + Debug> From<List<T>> for Vec<T> {
     fn from(list: List<T>) -> Self {
         let mut vector = Vec::new();
 
-        let mut head = &list.head;
+        let mut head = list.head.clone();
 
         while let Some(val) = head {
-            vector.push(val.data);
-            head = &val.next;
+            vector.push(val.borrow().data);
+            head = val.borrow_mut().next.clone();
         }
 
         vector
